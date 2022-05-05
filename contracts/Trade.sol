@@ -12,6 +12,8 @@ abstract contract Token is
 }
 
 contract Trade {
+    event SellEvent(address from, uint256 amount, address tokenAddress);
+    event BuyEvent(address from, uint256 amount, address tokenAddress);
     mapping(address => uint256) public currentPrices;
     address public foundation;
     bool initialized;
@@ -105,6 +107,7 @@ contract Trade {
         );
 
         token.mint(msg.sender, totalTransferTokens);
+        emit BuyEvent(msg.sender, totalTransferTokens, contractAddress);
         return totalTransferTokens;
     }
 
@@ -123,6 +126,11 @@ contract Trade {
         );
         payable(msg.sender).transfer(
             totalTransferXlt - (totalTransferXlt / 100) * foundationPercent
+        );
+        emit SellEvent(
+            msg.sender,
+            totalTransferXlt - (totalTransferXlt / 100) * foundationPercent,
+            contractAddress
         );
         return totalTransferXlt - (totalTransferXlt / 100) * foundationPercent;
     }
