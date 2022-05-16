@@ -18,12 +18,15 @@ contract Trade {
     address public foundation;
     bool initialized;
 
-    uint8 public foundationPercent; // this % goes to foundation from each operation (buy/sell)
+    // this % goes to foundation from each operation (buy/sell)
+    // 20% = 20 * 100 = 2000
+    // 1% = 100
+    uint8 public foundationPercent;
 
     function initialize() public {
         require(!initialized, "already initialized");
         foundation = 0x2CA62764C88F97AaF5BE02ed3f400000390C0b5d;
-        foundationPercent = 2;
+        foundationPercent = 100;
     }
 
     function sqrt(uint256 y) internal pure returns (uint256 z) {
@@ -97,9 +100,9 @@ contract Trade {
         require(msg.value > 0, "value <= 0");
         // calcTokensForXLT(contractAddress, msg.value);
         Token token = Token(contractAddress);
-        payable(foundation).transfer((msg.value / 100) * foundationPercent);
+        payable(foundation).transfer((msg.value / 10000) * foundationPercent);
         uint256 xltValAfterfee = msg.value -
-            (msg.value / 100) *
+            (msg.value / 10000) *
             foundationPercent;
         uint256 totalTransferTokens = calcTokensForXLT(
             contractAddress,
@@ -122,16 +125,17 @@ contract Trade {
         token.burn(msg.sender, amount);
         uint256 totalTransferXlt = calcXLTforTokens(contractAddress, amount);
         payable(foundation).transfer(
-            (totalTransferXlt / 100) * foundationPercent
+            (totalTransferXlt / 10000) * foundationPercent
         );
         payable(msg.sender).transfer(
-            totalTransferXlt - (totalTransferXlt / 100) * foundationPercent
+            totalTransferXlt - (totalTransferXlt / 10000) * foundationPercent
         );
         emit SellEvent(
             msg.sender,
-            totalTransferXlt - (totalTransferXlt / 100) * foundationPercent,
+            totalTransferXlt - (totalTransferXlt / 10000) * foundationPercent,
             contractAddress
         );
-        return totalTransferXlt - (totalTransferXlt / 100) * foundationPercent;
+        return
+            totalTransferXlt - (totalTransferXlt / 10000) * foundationPercent;
     }
 }
