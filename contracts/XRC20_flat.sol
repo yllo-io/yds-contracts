@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: UNLICENSED
 // File: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Context.sol
 
 // OpenZeppelin Contracts v4.4.1 (utils/Context.sol)
@@ -574,9 +575,11 @@ abstract contract TradeProxy {
 }
 
 contract XRC20 is ERC20 {
-    address tradeProxyAddress = 0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8;
+    address tradeProxyAddress;
 
-    constructor() ERC20("My Test Token", "TRK") {}
+    constructor(address _tradeProxyAddress) ERC20("My Test Token", "TRK") {
+        tradeProxyAddress = _tradeProxyAddress;
+    }
 
     modifier tradeContractOnly() {
         require(msg.sender == tradeProxyAddress, "not trade proxy");
@@ -594,7 +597,7 @@ contract XRC20 is ERC20 {
         _burn(to, amount);
     }
 
-    function decimals() public view override returns (uint8) {
-        return 4;
+    function decimals() public pure override returns (uint8) {
+        return 8;
     }
 }
