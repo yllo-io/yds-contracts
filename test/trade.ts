@@ -10,7 +10,7 @@ let addr1;
 let addr2;
 
 before(async function () {
-  tradeContract = await ethers.getContractFactory("Trade");
+  tradeContract = await ethers.getContractFactory("ExposedTrade");
 
   [owner, addr1, addr2] = await ethers.getSigners();
 
@@ -38,7 +38,6 @@ describe("XRC20 Operations", function () {
     expect(await xrc20.balanceOf(owner.address)).to.equal(0);
     expect(await xrc20.totalSupply()).to.equal(0);
   });
-
   it("Sell without balance", async function () {
     await expect(trade.sell(xrc20.address, 2000000)).to.be.revertedWith(
       "balance err"
@@ -52,5 +51,14 @@ describe("XRC20 Operations", function () {
     await expect(
       trade.sell(xrc20.address, ownerBalance + 1)
     ).to.be.revertedWith("balance err");
+  });
+});
+
+describe("Sqrt Operations", function () {
+  it("Rounding", async function () {
+    expect(await trade._sqrt(10)).to.equal(3);
+  });
+  it("Real sqrt", async function () {
+    expect(await trade._sqrt(9)).to.equal(3);
   });
 });

@@ -3,9 +3,7 @@
 pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
-abstract contract Token is
-    ERC20 // This doesn't have to match the real contract name. Call it what you like.
-{
+abstract contract Token is ERC20 {
     function mint(address to, uint256 amount) public virtual;
 
     function burn(address to, uint256 amount) public virtual;
@@ -137,5 +135,11 @@ contract Trade {
         );
         return
             totalTransferXlt - (totalTransferXlt / 10000) * foundationPercent;
+    }
+}
+
+contract ExposedTrade is Trade {
+    function _sqrt(uint256 a) public pure returns (uint256) {
+        return sqrt(a);
     }
 }
