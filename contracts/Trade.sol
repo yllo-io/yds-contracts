@@ -24,7 +24,7 @@ contract Trade {
     function initialize() public {
         require(!initialized, "already initialized");
         foundation = 0x2CA62764C88F97AaF5BE02ed3f400000390C0b5d;
-        foundationPercent = 100;
+        foundationPercent = 5;
     }
 
     function sqrt(uint256 y) internal pure returns (uint256 z) {
