@@ -32,16 +32,16 @@ contract FlashTrade {
     address public xrc20Address;
     address public owner;
 
-    address public tradeContractProxyddress;
+    address public tradeContractProxyAddress;
 
     //  = 0x916Bb4C1960Abb890CC053d00e685f21EA30fC58;
 
     constructor(
         address _pjAddress,
         address _xrc20Address,
-        address _tradeContractProxyddress
+        address _tradeContractProxyAddress
     ) {
-        tradeContractProxyddress = _tradeContractProxyddress;
+        tradeContractProxyAddress = _tradeContractProxyAddress;
         owner = msg.sender;
         pjAddress = _pjAddress;
         xrc20Address = _xrc20Address;
@@ -49,7 +49,7 @@ contract FlashTrade {
 
     function buy(uint256 xltAmount, address buyerAddress) external {
         require(xltAmount > xltBound, "xlt amount is too small");
-        Trade trade = Trade(tradeContractProxyddress);
+        Trade trade = Trade(tradeContractProxyAddress);
         uint256 boughtXRC20 = trade.buy{value: xltAmount - xltBound}(
             xrc20Address
         );
