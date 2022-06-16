@@ -575,18 +575,49 @@ abstract contract TradeProxy {
 }
 
 contract XRC20 is ERC20 {
+    string private _name;
+    string private _symbol;
     address tradeProxyAddress;
+    address _admin;
 
-    constructor(address _tradeProxyAddress) ERC20("My Test Token", "TRK") {
+    constructor(address _tradeProxyAddress, address admin_)
+        ERC20("My Test Token", "TRK")
+    {
         tradeProxyAddress = _tradeProxyAddress;
+        _admin = admin_;
     }
 
     modifier tradeContractOnly() {
         require(msg.sender == tradeProxyAddress, "not trade proxy");
-        // TradeProxy tradeProxy = TradeProxy(tradeProxyAddress);
-        // address tradingContractAddress = tradeProxy.getImplementation();
-        // require(msg.sender == tradingContractAddress, "not trade impl");
         _;
+    }
+    modifier adminOnly() {
+        require(msg.sender == _admin, "not admin");
+        _;
+    }
+
+    function setName(string memory name_) external adminOnly {
+        _name = name_;
+    }
+
+    function setSymbol(string memory symbol_) external adminOnly {
+        _symbol = symbol_;
+    }
+
+    function name() public view override returns (string memory) {
+        return _name;
+    }
+
+    function symbol() public view override returns (string memory) {
+        return _symbol;
+    }
+
+    function updateAdmin(address admin_) external adminOnly {
+        _admin = admin_;
+    }
+
+    function admin() public view returns (address) {
+        return _admin;
     }
 
     function mint(address to, uint256 amount) external tradeContractOnly {

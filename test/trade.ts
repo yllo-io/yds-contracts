@@ -17,7 +17,7 @@ before(async function () {
   trade = await tradeContract.deploy();
 
   xrc20Contract = await ethers.getContractFactory("XRC20");
-  xrc20 = await xrc20Contract.deploy(trade.address);
+  xrc20 = await xrc20Contract.deploy(trade.address, owner.address);
 });
 
 describe("Deploy Trade", function () {

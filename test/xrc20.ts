@@ -12,7 +12,7 @@ let addr2: SignerWithAddress;
 beforeEach(async function () {
   xrc20Contract = await ethers.getContractFactory("XRC20");
   [owner, addr1, addr2] = await ethers.getSigners();
-  xrc20 = await xrc20Contract.deploy(owner.address);
+  xrc20 = await xrc20Contract.deploy(owner.address, owner.address);
 });
 
 describe("Deploy XRC20", function () {
@@ -29,5 +29,25 @@ describe("Mint XRC20", function () {
   });
   it("Mint for trade proxy", async function () {
     await xrc20.mint(owner.address, 20000);
+  });
+});
+
+describe("Updating Token data", function () {
+  it("Update admin from not admin", async function () {
+    await expect(
+      xrc20.connect(addr1).updateAdmin(owner.address)
+    ).to.be.revertedWith("not admin");
+  });
+  it("Change Token Name", async function () {
+    await xrc20.setName("newName");
+    expect(await xrc20.name()).to.equal("newName");
+  });
+  it("Change Token Name", async function () {
+    await xrc20.setSymbol("NN");
+    expect(await xrc20.symbol()).to.equal("NN");
+  });
+  it("Update admin", async function () {
+    await xrc20.updateAdmin(addr1.address);
+    expect(await xrc20.admin()).to.equal(addr1.address);
   });
 });

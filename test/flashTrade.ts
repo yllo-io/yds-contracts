@@ -17,7 +17,7 @@ before(async function () {
   trade = await tradeContract.deploy();
 
   xrc20Contract = await ethers.getContractFactory("XRC20");
-  xrc20 = await xrc20Contract.deploy(trade.address);
+  xrc20 = await xrc20Contract.deploy(trade.address, owner.address);
 
   flashTradeContract = await ethers.getContractFactory("FlashTrade");
   flashTrade = await flashTradeContract.deploy(
